@@ -2,8 +2,11 @@ import re
 import json
 import logging
 import zlib
+import requests
 from http.client import HTTPConnection, IncompleteRead
 from urllib.parse import urlparse
+from pywebhdfs.webhdfs import PyWebHdfsClient
+from hdfs import InsecureClient
 
 logging.basicConfig(level=logging.DEBUG, datefmt='%m/%d/%Y %I:%M:%S %p',
                     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -110,12 +113,19 @@ class WebHDFS(object):
 
 
 
+def upload_to_hdfs(ip,user):
+    hadoop = InsecureClient(ip, user)
+    hadoop.upload('','test.txt')
+
 
 if __name__ == "__main__":
-    webhdfs = WebHDFS("218.146.20.50", 9870, "hadoopuser")
+    #webhdfs = WebHDFS("218.146.20.50", 9870, "hadoopuser")
     #webhdfs.mkdir('testdirectory')
     #webhdfs.listdir('')
-    webhdfs.copyfromlocal('test.txt','testd')
+    #hdfs.create_file(my_file,my_data)
+
+    upload_to_hdfs('http://218.146.20.50:9870', 'hadoopuser')
+    #webhdfs.copyfromlocal('test.txt','testd/test.txt')
 
 
 
