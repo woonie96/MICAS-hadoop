@@ -19,7 +19,7 @@ logger = logging.getLogger(name='file_dialog')
 
 class Ui_Dialog(QWidget):
     def setupUi(self, Dialog):
-        Dialog.setObjectName("Dialog")
+        Dialog.setObjectName("MICAS")
         Dialog.resize(425, 742)
         self.ip_input = QtWidgets.QTextEdit(Dialog)
         self.ip_input.setGeometry(QtCore.QRect(250, 20, 111, 31))
@@ -77,7 +77,7 @@ class Ui_Dialog(QWidget):
 
     def retranslateUi(self, Dialog):
         _translate = QtCore.QCoreApplication.translate
-        Dialog.setWindowTitle(_translate("Dialog", "Dialog"))
+        Dialog.setWindowTitle(_translate("Dialog", "MICAS"))
         self.ip_input.setHtml(_translate("Dialog",
                                          "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
                                          "<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\n"
@@ -149,7 +149,8 @@ class Ui_Dialog(QWidget):
         ip_address = self.ip_input.toPlainText()
         port_number = self.port_input.toPlainText()
         user_name = self.user_input.toPlainText()
-        target_name = self.mkdir_input.toPlainText()
+        dir_name = self.dir_input.toPlainText()
+        target_name = dir_name+'/' + self.mkdir_input.toPlainText()
         host_address = 'http://' + ip_address + ':' + port_number
         hadoop = InsecureClient(host_address, user_name)
         hadoop.makedirs(target_name)
