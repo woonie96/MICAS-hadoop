@@ -156,6 +156,7 @@ class Ui_Dialog(QWidget):
         hadoop.makedirs(target_name)
 
     def listdir_hdfs(self):
+        index = 0
         self.list_display.setText('')
         ip_address = self.ip_input.toPlainText()
         port_number = self.port_input.toPlainText()
@@ -163,10 +164,11 @@ class Ui_Dialog(QWidget):
         dir_name = self.dir_input.toPlainText()
         host_address = 'http://' + ip_address + ':' + port_number
         hadoop = InsecureClient(host_address, user_name)
-        directory = hadoop.list(dir_name)
-
+        directory = hadoop.list(dir_name,status=True)
+        # self.list_display.append(directory[0][0]+':'+directory[0][1]['type'])
         for file in directory:
-            self.list_display.append(file)
+            display = 'Name:  '+ str(file[0]) + ' | Type:  ' + file[1]['type']
+            self.list_display.append(display)
 
 
 if __name__ == "__main__":
