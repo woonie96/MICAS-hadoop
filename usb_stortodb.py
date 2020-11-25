@@ -10,57 +10,22 @@ usb_stor_reader = csv.reader(usbstor)
 
 index = 0
 for line in usb_stor_reader:
+    date_list=[1,3,4,5,6,9,10,11,12]
+    time_list =[]
     if index == 0:
         index +=1
         pass
     else:
-        try:
-            t1 = datetime.strptime(line[1], '%Y-%m-%d_%H:%M:%S')
-            t1.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            t1 = None
-        try:
-            t3 = datetime.strptime(line[3], '%Y-%m-%d_%H:%M:%S')
-            t3.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            t3 = None
-        try:
-            t4 = datetime.strptime(line[4], '%Y-%m-%d_%H:%M:%S')
-            t4.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            t4=None
-        try:
-            t5 = datetime.strptime(line[5], '%Y-%m-%d_%H:%M:%S')
-            t5.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            t5 = None
-        try:
-            t6 = datetime.strptime(line[6], '%Y-%m-%d_%H:%M:%S')
-            t6.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            t6=None
-        try:
-            t9 = datetime.strptime(line[9], '%Y-%m-%d_%H:%M:%S')
-            t9.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            t9=None
-        try:
-            t10 = datetime.strptime(line[10], '%Y-%m-%d_%H:%M:%S')
-            t10.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            t10=None
-        try:
-            t11 = datetime.strptime(line[11], '%Y-%m-%d_%H:%M:%S')
-            t11.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            t11=None
-        try:
-            t12 = datetime.strptime(line[12], '%Y-%m-%d_%H:%M:%S')
-            t12.strftime('%Y-%m-%d %H:%M:%S')
-        except:
-            t12 = None
+        for date in date_list:
+            try:
+                time = datetime.strptime(line[date],'%Y-%m-%d_%H:%M:%S')
+                time.strftime('%Y-%m-%d %H:%M:%S')
+                time_list.append(time)
+            except:
+                time = None
+                time_list.append(time)
 
-        curs.execute(sql_usb_stor, (line[0],t1,line[2],t3,t4,t5,t6,line[7],line[8],t9,t10,t11,t12))
+        curs.execute(sql_usb_stor, (line[0],time_list[0],line[2],time_list[1],time_list[2],time_list[3],time_list[4],line[7],line[8],time_list[5],time_list[6],time_list[7],time_list[8]))
 conn.commit()
 conn.close()
 usbstor.close()
