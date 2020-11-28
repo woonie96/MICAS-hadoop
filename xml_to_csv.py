@@ -1,13 +1,12 @@
 import xml.etree.ElementTree as ET
 import csv
+import re
 import os
 import pymysql
 import csv
 import Evtx.Evtx as evtx
 from datetime import datetime
-conn = pymysql.connect(host='localhost', user='root', password='root', db='study_db',charset='utf8')
-curs = conn.cursor()
-sql_usb_log="insert into usb_log (event_id, system_time, instance_id) values (%s, %s, %s)"
+
 output_path=os.getcwd()+'\\usb_xml\\'
 
 try:
@@ -55,17 +54,40 @@ def xml_to_csv():
 
 	Resident_Data.close()
 def csv_to_db():
+	conn = pymysql.connect(host='localhost', user='root', password='root', db='study_db', charset='utf8')
+	curs = conn.cursor()
+	sql_usb_log = "insert into usb_log (event_id, system_time, serial_number,Manufacturer,usb_name) values (%s, %s, %s, %s, %s)"
 	usb_log = open('usblog.csv','r',encoding='utf-8')
 	usb_log_reader = csv.reader(usb_log)
-
+	match = "(?<=\{).+?(?=\})"
+	reg = re.compile(match)
 	for line in usb_log_reader:
-		try:
-			t1 = datetime.strptime(line[1], '%Y-%m-%d %H:%M:%S.%f')
-			t1.strftime('%Y-%m-%d %H:%M:%S')
-		except:
-			t1 = None
+		if line[2].startswith('USB'):
+			try:
+				serial = line[2].split('\\')[2]
+				prod = line[2].split('\\')[1].split('&')[0].split('VID_')[1]
+				ven = line[2].split('\\')[1].split('&')[1].split('PID_')[1]
+				t1 = datetime.strptime(line[1], '%Y-%m-%d %H:%M:%S.%f')
+				t1.strftime('%Y-%m-%d %H:%M:%S')
+			except:
+				serial = line[2]
+				prod = None
+				ven = None
+		elif line[2].startswith('SWD'):
+			try:
+				serial = line[2].split('#')[2]
+				ven = line[2].split('&')[1].split('VEN_')[1]
+				prod = line[2].split('&')[2].split('PROD_')[1]
+				t1 = datetime.strptime(line[1], '%Y-%m-%d %H:%M:%S.%f')
+				t1.strftime('%Y-%m-%d %H:%M:%S')
+			except:
+				serial = reg.search(line[2])[0]
+				prod = None
+				ven = None
+		else:
+			continue
 
-		curs.execute(sql_usb_log, (line[0], t1, line[2]))
+		curs.execute(sql_usb_log,(line[0],t1,serial,ven,prod))
 
 	conn.commit()
 	conn.close()
