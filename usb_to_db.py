@@ -51,6 +51,7 @@ def usb_db():
     sql_usb = "insert into usb (Subkey_Name,Serial_Number,Friendly_Name,ContainerID,First_Install_Date,Last_Remove_Date) values (%s, %s, %s, %s, %s, %s)"
     usb = open('usb.csv', 'r', encoding='utf-8')
     usb_reader = csv.reader(usb)
+    print(usb_reader)
     index = 0;
     for line in usb_reader:
         date_list=[8,11]
@@ -77,10 +78,10 @@ def usb_db():
                     time = None
                     time_list.append(time)
 
-            curs.execute(sql_usb, (Subkey_Name, Serial_Number, Friendly_Name, ContainerID, time_list[0], time_list[1]))
-    conn.commit()
-    conn.close()
-    usb.close()
+    #         curs.execute(sql_usb, (Subkey_Name, Serial_Number, Friendly_Name, ContainerID, time_list[0], time_list[1]))
+    # conn.commit()
+    # conn.close()
+    # usb.close()
 if __name__ == "__main__":
     usb_db()
-    usb_stor_db()
+    #usb_stor_db()
